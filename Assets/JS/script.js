@@ -1,4 +1,4 @@
-// นำเข้าเฉพาะสิ่งที่จำเป็นเพื่อความลีน
+// Assets/JS/script.js
 import { db, ref, get, child } from './firebase-config.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <p class="text-slate-400 text-sm leading-relaxed">${t.desc}</p>
         </div>`;
 
-    // --- 2. ดึงข้อมูลแบบ Optimized (เรียกครั้งเดียวแล้วตัด Connection) ---
+    // --- 2. ดึงข้อมูลแบบ Optimized (เรียกครั้งเดียวตอนโหลดหน้าจอ) ---
     const dbRef = ref(db);
 
     get(child(dbRef, 'tools')).then((snapshot) => {
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const devContainer = document.getElementById('dev-tools');
 
         if (snapshot.exists()) {
-            // ดึงข้อมูลและวาดการ์ด
+            // ดึงข้อมูลและวาดการ์ดลงในแต่ละหมวดหมู่
             if (data.clinical) {
                 clinicalContainer.innerHTML = Object.values(data.clinical).map(renderCard).join('');
             }
@@ -44,121 +44,50 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.dev) {
                 devContainer.innerHTML = Object.values(data.dev).map(renderDevCard).join('');
             }
-            console.log("Data fetched and connection closed.");
+            console.log("Data fetched successfully.");
         } else {
-            clinicalContainer.innerHTML = '<p class="text-slate-400">ไม่มีข้อมูลเครื่องมือ</p>';
+            clinicalContainer.innerHTML = '<p class="text-slate-400">ยังไม่มีข้อมูลเครื่องมือในระบบ</p>';
         }
     }).catch((error) => {
         console.error("Firebase Error:", error);
     });
 });
 
-// --- 3. ระบบ Modal ติดตั้งแอป (คงเดิม) ---
-const installData = {
-    ios: { icon: "fa-apple text-slate-700", text: ["เปิด Safari", "แตะไอคอน Share", "เลือก Add to Home Screen", "กด Add"] },
-    android: { icon: "fa-android text-green-500", text: ["เปิด Chrome", "แตะเมนู 3 จุด", "เลือก Install App", "กดติดตั้ง"] },
-    pc: { icon: "fa-desktop text-blue-500", text: ["เปิด Chrome / Edge", "คลิกไอคอนติดตั้งที่แถบ URL", "กด Install"] }
-};
+// --- 3. ระบบ PWA Install อัตโนมัติ ---
 
-const modal = document.getElementById('modal');
-const modalContent = document.getElementById('modal-content');
+let deferredPrompt;
 
-window.openModal = (os) => {
-    document.getElementById('modal-title').innerHTML = `<i class="fa-brands ${installData[os].icon} mr-2"></i> วิธีติดตั้ง`;
-    document.getElementById('modal-steps').innerHTML = installData[os].text.map(step => `<li>${step}</li>`).join('');
-    modal.classList.remove('hidden');
-    setTimeout(() => { modal.classList.remove('opacity-0'); modalContent.classList.remove('scale-95'); }, 10);
-};
-
-window.closeModal = () => {
-    modal.classList.add('opacity-0'); modalContent.classList.add('scale-95');
-    setTimeout(() => modal.classList.add('hidden'), 300);
-};
-
-modal?.addEventListener('click', (e) => e.target === modal && closeModal());
-
-// เพิ่มตัวแปรสถานะไว้ด้านบนของสคริปต์
-let isEditing = false;
-let editingId = null;
-let editingCat = null;
-
-// 1. ปรับปรุงฟังก์ชัน Render รายการเครื่องมือ (เพิ่มปุ่มแก้ไข)
-// ในส่วน onValue(toolsRef, ...) ให้เพิ่มปุ่มนี้เข้าไปในชุดปุ่มเดิม:
-/* <button onclick="editTool('${category}', '${toolId}')" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-2 rounded-lg text-sm font-semibold transition shadow-sm">
-        <i class="fa-solid fa-pen-to-square"></i>
-    </button>
-*/
-
-// 2. ฟังก์ชันเตรียมข้อมูลเพื่อแก้ไข (ดึงข้อมูลจากรายการขึ้นไปบนฟอร์ม)
-window.editTool = async (category, toolId) => {
-    isEditing = true;
-    editingId = toolId;
-    editingCat = category;
-
-    try {
-        const snapshot = await get(child(ref(db), `tools/${category}/${toolId}`));
-        const tool = snapshot.val();
-
-        // นำข้อมูลไปใส่ใน Input ต่างๆ
-        document.getElementById('tool-category').value = category;
-        document.getElementById('tool-title').value = tool.title;
-        document.getElementById('tool-desc').value = tool.desc;
-        document.getElementById('tool-icon').value = tool.icon;
-        document.getElementById('tool-link').value = tool.link;
-
-        // เปลี่ยน UI ของฟอร์ม
-        document.getElementById('form-title').innerText = "แก้ไขเครื่องมือ";
-        document.getElementById('submit-btn').querySelector('span').innerText = "บันทึกการแก้ไข";
-        document.getElementById('submit-btn').classList.replace('bg-slate-800', 'bg-amber-600');
-        document.getElementById('cancel-edit').classList.remove('hidden');
-
-        // เลื่อนหน้าจอขึ้นไปที่ฟอร์ม
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    } catch (error) { alert(error.message); }
-};
-
-// 3. ฟังก์ชันยกเลิกการแก้ไข
-window.cancelEdit = () => {
-    isEditing = false;
-    editingId = null;
-    editingCat = null;
-    document.getElementById('tool-form').reset();
-    document.getElementById('form-title').innerText = "เพิ่มเครื่องมือใหม่";
-    document.getElementById('submit-btn').querySelector('span').innerText = "บันทึกข้อมูล";
-    document.getElementById('submit-btn').classList.replace('bg-amber-600', 'bg-slate-800');
-    document.getElementById('cancel-edit').classList.add('hidden');
-};
-
-// 4. ปรับปรุงฟังก์ชัน Submit (ให้รองรับทั้ง Add และ Edit)
-document.getElementById('tool-form').addEventListener('submit', async (e) => {
+// ดักจับ Event เมื่อเบราว์เซอร์พร้อมให้ติดตั้ง (ทำงานบน Android และ Chrome/Edge PC)
+window.addEventListener('beforeinstallprompt', (e) => {
+    // ป้องกันเบราว์เซอร์แสดง popup เล็กๆ ของตัวเอง
     e.preventDefault();
-
-    const category = document.getElementById('tool-category').value;
-    const title = document.getElementById('tool-title').value;
-    const desc = document.getElementById('tool-desc').value;
-    const icon = document.getElementById('tool-icon').value;
-    const link = document.getElementById('tool-link').value;
-
-    let bg, color;
-    if(category === 'clinical') { bg = 'bg-indigo-100'; color = 'text-indigo-600'; }
-    else if(category === 'patient') { bg = 'bg-emerald-100'; color = 'text-emerald-600'; }
-    else { bg = 'bg-slate-200'; color = 'text-slate-400'; }
-
-    try {
-        if (isEditing) {
-            // กรณีแก้ไข: ถ้าเปลี่ยนหมวดหมู่ ต้องลบอันเก่าในหมวดเดิมทิ้งด้วย
-            if (editingCat !== category) {
-                await remove(ref(db, `tools/${editingCat}/${editingId}`));
-            }
-            // เซฟทับที่ ID เดิม (หรือตำแหน่งใหม่ถ้าเปลี่ยนหมวด)
-            await set(ref(db, `tools/${category}/${editingId}`), { title, desc, icon, bg, color, link });
-            alert('แก้ไขข้อมูลเรียบร้อย!');
-            cancelEdit();
-        } else {
-            // กรณีเพิ่มใหม่: ใช้ push() ปกติ
-            const newToolRef = push(ref(db, 'tools/' + category));
-            await set(newToolRef, { title, desc, icon, bg, color, link });
-            e.target.reset();
-        }
-    } catch (error) { alert(error.message); }
+    // เก็บ Event ไว้ใช้เมื่อผู้ใช้กดปุ่ม
+    deferredPrompt = e;
 });
+
+window.installApp = async (os) => {
+    // 1. กรณีเป็น Android หรือ PC และระบบพร้อมให้ติดตั้ง
+    if ((os === 'android' || os === 'pc') && deferredPrompt) {
+        // สั่งเปิดหน้าต่างติดตั้งของระบบ
+        deferredPrompt.prompt();
+
+        // รอผู้ใช้กดยืนยัน หรือ ยกเลิก
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+            console.log('User accepted the install prompt');
+        } else {
+            console.log('User dismissed the install prompt');
+        }
+
+        // ล้างค่า Event หลังจากใช้งานเสร็จ
+        deferredPrompt = null;
+    }
+    // 2. กรณีเป็น iOS (Apple ไม่รองรับคำสั่งติดตั้งอัตโนมัติ)
+    else if (os === 'ios') {
+        alert('สำหรับ iOS:\nกรุณาแตะไอคอน Share (แชร์) ที่แถบด้านล่าง\nแล้วเลือก "Add to Home Screen" (เพิ่มไปยังหน้าจอโฮม)');
+    }
+    // 3. กรณีติดตั้งไปแล้ว หรือ เปิดบนเบราว์เซอร์ที่ไม่รองรับ / ยังไม่เป็น PWA เต็มรูปแบบ
+    else {
+        alert('อุปกรณ์นี้อาจติดตั้งแอปไว้แล้ว หรือเบราว์เซอร์ไม่รองรับการติดตั้งอัตโนมัติ\n(บน PC สามารถกดไอคอนติดตั้งที่แถบ URL ด้านขวาบนได้เลย)');
+    }
+};
