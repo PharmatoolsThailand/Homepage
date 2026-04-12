@@ -22,13 +22,13 @@
                 <i class="fa-solid fa-user-shield"></i>
             </div>
             <h1 class="text-2xl font-bold text-slate-800">เข้าสู่ระบบหลังบ้าน</h1>
-            <p class="text-slate-500 text-sm mt-2">สำหรับผู้ดูแลระบบ Pharmatools เท่านั้น</p>
+            <p class="text-slate-500 text-sm mt-2">ยืนยันตัวตนผ่านระบบ Firebase Auth</p>
         </div>
 
         <form id="login-form" class="space-y-4">
             <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-1">ชื่อผู้ใช้ (Username)</label>
-                <input type="text" id="username" class="input-field" placeholder="กรอกชื่อผู้ใช้..." required>
+                <label class="block text-sm font-semibold text-slate-700 mb-1">อีเมลผู้ใช้ (Email)</label>
+                <input type="email" id="username" class="input-field" placeholder="example@email.com" required>
             </div>
             <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-1">รหัสผ่าน (Password)</label>
@@ -41,7 +41,6 @@
     </div>
 
     <div id="dashboard-section" class="w-full max-w-5xl hidden flex-col h-[90vh]">
-
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 mb-6 flex justify-between items-center shrink-0">
             <h2 class="text-xl font-bold text-teal-800"><i class="fa-solid fa-laptop-medical mr-2"></i> Pharmatools Admin Panel</h2>
             <button onclick="logout()" class="text-rose-500 hover:text-rose-700 font-semibold px-4 py-2 rounded-lg hover:bg-rose-50 transition">
@@ -50,9 +49,12 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow overflow-hidden">
-
             <div class="admin-card lg:col-span-1 overflow-y-auto hide-scrollbar">
-                <h3 class="text-lg font-bold text-slate-800 mb-4 border-l-4 border-teal-500 pl-3">เพิ่มเครื่องมือใหม่</h3>
+                <div class="flex justify-between items-center mb-4 border-l-4 border-teal-500 pl-3">
+                    <h3 id="form-title" class="text-lg font-bold text-slate-800">เพิ่มเครื่องมือใหม่</h3>
+                    <button id="cancel-edit-btn" onclick="cancelEdit()" class="hidden text-xs bg-slate-200 hover:bg-slate-300 text-slate-600 px-2 py-1 rounded-lg transition">ยกเลิกแก้ไข</button>
+                </div>
+
                 <form id="tool-form" class="space-y-4">
                   <div>
                       <label class="block text-sm font-semibold text-slate-700 mb-1">หมวดหมู่</label>
@@ -68,115 +70,146 @@
                   </div>
                   <div>
                       <label class="block text-sm font-semibold text-slate-700 mb-1">รายละเอียดแบบย่อ</label>
-                      <textarea id="tool-desc" class="input-field resize-none" rows="3" placeholder="อธิบายประโยชน์ของเครื่องมือ..." required></textarea>
+                      <textarea id="tool-desc" class="input-field resize-none" rows="3" placeholder="อธิบายประโยชน์..." required></textarea>
                   </div>
                   <div>
                       <label class="block text-sm font-semibold text-slate-700 mb-1">ไอคอน (FontAwesome Class)</label>
-                      <input type="text" id="tool-icon" class="input-field" placeholder="เช่น fa-heart-pulse" required>
+                      <input type="text" id="tool-icon" class="input-field" placeholder="fa-heart-pulse" required>
                   </div>
-
                   <div>
-                      <label class="block text-sm font-semibold text-slate-700 mb-1">ลิงก์สำหรับเปิดใช้งาน (URL)</label>
-                      <input type="text" id="tool-link" class="input-field" placeholder="เช่น https://your-link.com หรือ warfarin.html" required>
+                      <label class="block text-sm font-semibold text-slate-700 mb-1">ลิงก์ URL</label>
+                      <input type="text" id="tool-link" class="input-field" placeholder="warfarin.html" required>
                   </div>
 
-                  <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-xl shadow-md transition">
-                      <i class="fa-solid fa-plus mr-2"></i> บันทึกข้อมูลเข้า Pharmatools
+                  <button type="submit" id="submit-btn" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-xl shadow-md transition">
+                      <i class="fa-solid fa-plus mr-2"></i> <span>บันทึกข้อมูล</span>
                   </button>
                 </form>
             </div>
 
             <div class="admin-card lg:col-span-2 overflow-y-auto hide-scrollbar flex flex-col h-[70vh]">
                 <h3 class="text-lg font-bold text-slate-800 mb-4 border-l-4 border-blue-500 pl-3">รายการเครื่องมือปัจจุบัน</h3>
-
                 <div id="tools-list" class="bg-slate-50 rounded-xl p-4 border border-slate-200 flex-grow overflow-y-auto">
                     <div class="flex h-full items-center justify-center text-slate-400 text-center">
                         <div><i class="fa-solid fa-spinner fa-spin text-3xl mb-3"></i><p>กำลังโหลดข้อมูล...</p></div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
     <script type="module">
-        import { db, ref, push, set, onValue, remove, get, child } from './Assets/JS/firebase-config.js';
+        import { db, ref, push, set, onValue, remove, get, child, auth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from './Assets/JS/firebase-config.js';
 
         const loginForm = document.getElementById('login-form');
         const loginSection = document.getElementById('login-section');
         const dashboardSection = document.getElementById('dashboard-section');
         const body = document.getElementById('app-body');
 
-        // 1. ระบบ Login
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-            if(user === 'admin' && pass === '1234') {
+        let isEditing = false;
+        let editingId = null;
+        let editingCat = null;
+
+        // --- 1. ระบบตรวจสอบสถานะ Login (Session) ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // ถ้าล็อกอินอยู่ ให้เข้า Dashboard ทันที
                 loginSection.classList.add('hidden');
                 dashboardSection.classList.remove('hidden');
                 dashboardSection.classList.add('flex');
                 body.classList.remove('items-center');
                 body.classList.add('items-start', 'pt-8');
-            } else { alert('ชื่อผู้ใช้ หรือ รหัสผ่านไม่ถูกต้องครับ'); }
+            } else {
+                // ถ้าไม่ได้ล็อกอิน ให้ไปหน้า Login
+                loginSection.classList.remove('hidden');
+                dashboardSection.classList.add('hidden');
+                body.classList.add('items-center');
+                body.classList.remove('items-start', 'pt-8');
+            }
         });
 
+        // --- 2. ฟังก์ชัน Login จริงผ่าน Firebase ---
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+
+            signInWithEmailAndPassword(auth, email, pass)
+                .catch(error => alert("เข้าสู่ระบบล้มเหลว: " + error.message));
+        });
+
+        // --- 3. ฟังก์ชัน Logout จริง ---
         window.logout = function() {
-            loginSection.classList.remove('hidden'); dashboardSection.classList.add('hidden'); dashboardSection.classList.remove('flex');
-            body.classList.add('items-center'); body.classList.remove('items-start', 'pt-8'); loginForm.reset();
+            if(confirm('ยืนยันการออกจากระบบ?')) {
+                signOut(auth).catch(error => alert(error.message));
+                cancelEdit();
+            }
         };
 
-        // 2. ดึงข้อมูลมาแสดงเป็นรายการพร้อมปุ่มแก้ไข/ย้าย/ลบ
+        // --- 4. ดึงข้อมูลเครื่องมือ ---
         const toolsRef = ref(db, 'tools');
         onValue(toolsRef, (snapshot) => {
             const data = snapshot.val();
             const listContainer = document.getElementById('tools-list');
-
             if (data) {
                 let html = '<div class="space-y-3">';
-                // วนลูปดึงข้อมูลทุกหมวดหมู่
                 for (const category in data) {
                     for (const toolId in data[category]) {
                         const tool = data[category][toolId];
                         const catName = category === 'clinical' ? 'งานคลินิก' : (category === 'patient' ? 'สำหรับผู้ป่วย' : 'กำลังพัฒนา');
-
                         html += `
                             <div class="bg-white border border-slate-200 p-4 rounded-xl flex flex-col md:flex-row justify-between items-center gap-4 shadow-sm hover:border-teal-400 transition">
                                 <div class="flex items-center gap-4 w-full md:w-auto">
-                                    <div class="w-12 h-12 ${tool.bg} ${tool.color} rounded-lg flex shrink-0 items-center justify-center text-2xl">
-                                        <i class="fa-solid ${tool.icon}"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-bold text-slate-800 text-lg">${tool.title}</h4>
-                                        <span class="text-xs font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded border border-slate-200">หมวด: ${catName}</span>
-                                    </div>
+                                    <div class="w-12 h-12 ${tool.bg} ${tool.color} rounded-lg flex shrink-0 items-center justify-center text-2xl"><i class="fa-solid ${tool.icon}"></i></div>
+                                    <div><h4 class="font-bold text-slate-800 text-lg">${tool.title}</h4><span class="text-xs font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded border border-slate-200">หมวด: ${catName}</span></div>
                                 </div>
-
                                 <div class="flex items-center gap-2 w-full md:w-auto bg-slate-50 p-2 rounded-lg border border-slate-200">
+                                    <button onclick="editTool('${category}', '${toolId}')" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-2 rounded-lg text-sm font-semibold transition shadow-sm"><i class="fa-solid fa-pen-to-square"></i></button>
                                     <select id="move-${toolId}" class="px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-teal-500 flex-grow md:flex-none cursor-pointer">
                                         <option value="clinical" ${category === 'clinical' ? 'selected' : ''}>งานคลินิก</option>
                                         <option value="patient" ${category === 'patient' ? 'selected' : ''}>สำหรับผู้ป่วย</option>
                                         <option value="dev" ${category === 'dev' ? 'selected' : ''}>กำลังพัฒนา</option>
                                     </select>
-                                    <button onclick="moveTool('${category}', '${toolId}')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-semibold transition shadow-sm" title="ย้ายหมวดหมู่">
-                                        ย้าย
-                                    </button>
-                                    <button onclick="deleteTool('${category}', '${toolId}')" class="bg-rose-500 hover:bg-rose-600 text-white px-3 py-2 rounded-lg text-sm font-semibold transition shadow-sm" title="ลบเครื่องมือ">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
+                                    <button onclick="moveTool('${category}', '${toolId}')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-semibold transition shadow-sm">ย้าย</button>
+                                    <button onclick="deleteTool('${category}', '${toolId}')" class="bg-rose-500 hover:bg-rose-600 text-white px-3 py-2 rounded-lg text-sm font-semibold transition shadow-sm"><i class="fa-solid fa-trash"></i></button>
                                 </div>
-                            </div>
-                        `;
+                            </div>`;
                     }
                 }
-                html += '</div>';
-                listContainer.innerHTML = html;
+                listContainer.innerHTML = html + '</div>';
             } else {
-                listContainer.innerHTML = '<div class="flex h-full items-center justify-center text-slate-400"><p>ยังไม่มีข้อมูลเครื่องมือในระบบ</p></div>';
+                listContainer.innerHTML = '<div class="flex h-full items-center justify-center text-slate-400"><p>ยังไม่มีข้อมูลในระบบ</p></div>';
             }
         });
 
-        // 3. ฟังก์ชันเพิ่มข้อมูลใหม่
+        // --- 5. ฟังก์ชันจัดการข้อมูล (CRUD) ---
+        window.editTool = async (category, toolId) => {
+            isEditing = true; editingId = toolId; editingCat = category;
+            try {
+                const snapshot = await get(child(ref(db), `tools/${category}/${toolId}`));
+                const tool = snapshot.val();
+                document.getElementById('tool-category').value = category;
+                document.getElementById('tool-title').value = tool.title;
+                document.getElementById('tool-desc').value = tool.desc;
+                document.getElementById('tool-icon').value = tool.icon;
+                document.getElementById('tool-link').value = tool.link;
+                document.getElementById('form-title').innerText = "แก้ไขเครื่องมือ";
+                document.getElementById('submit-btn').querySelector('span').innerText = "บันทึกการแก้ไข";
+                document.getElementById('submit-btn').classList.replace('bg-slate-800', 'bg-amber-600');
+                document.getElementById('cancel-edit-btn').classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } catch (error) { alert(error.message); }
+        };
+
+        window.cancelEdit = () => {
+            isEditing = false; editingId = null; editingCat = null;
+            document.getElementById('tool-form').reset();
+            document.getElementById('form-title').innerText = "เพิ่มเครื่องมือใหม่";
+            document.getElementById('submit-btn').querySelector('span').innerText = "บันทึกข้อมูล";
+            document.getElementById('submit-btn').classList.replace('bg-amber-600', 'bg-slate-800');
+            document.getElementById('cancel-edit-btn').classList.add('hidden');
+        };
+
         document.getElementById('tool-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const category = document.getElementById('tool-category').value;
@@ -184,54 +217,39 @@
             const desc = document.getElementById('tool-desc').value;
             const icon = document.getElementById('tool-icon').value;
             const link = document.getElementById('tool-link').value;
-
             let bg, color;
-            if(category === 'clinical') { bg = 'bg-indigo-100'; color = 'text-indigo-600'; }
-            else if(category === 'patient') { bg = 'bg-emerald-100'; color = 'text-emerald-600'; }
-            else { bg = 'bg-slate-200'; color = 'text-slate-400'; }
+            if(category === 'clinical') { bg='bg-indigo-100'; color='text-indigo-600'; }
+            else if(category === 'patient') { bg='bg-emerald-100'; color='text-emerald-600'; }
+            else { bg='bg-slate-200'; color='text-slate-400'; }
 
             try {
-                const newToolRef = push(ref(db, 'tools/' + category));
-                await set(newToolRef, { title, desc, icon, bg, color, link });
-                e.target.reset(); // ไม่ต้อง alert แล้วเพราะข้อมูลจะเด้งขึ้นตารางทันที
-            } catch (error) { alert('ข้อผิดพลาด: ' + error.message); }
+                if (isEditing) {
+                    if (editingCat !== category) await remove(ref(db, `tools/${editingCat}/${editingId}`));
+                    await set(ref(db, `tools/${category}/${editingId}`), { title, desc, icon, bg, color, link });
+                    cancelEdit();
+                } else {
+                    await set(push(ref(db, 'tools/' + category)), { title, desc, icon, bg, color, link });
+                    e.target.reset();
+                }
+            } catch (error) { alert(error.message); }
         });
 
-        // 4. ฟังก์ชันย้ายหมวดหมู่ (Move Tool)
-        window.moveTool = async (oldCategory, toolId) => {
-            const newCategory = document.getElementById(`move-${toolId}`).value;
-            if(oldCategory === newCategory) return; // ถ้าเลือกหมวดเดิม ไม่ต้องทำอะไร
-
+        window.moveTool = async (oldCat, toolId) => {
+            const newCat = document.getElementById(`move-${toolId}`).value;
+            if(oldCat === newCat) return;
             try {
-                // 4.1 ไปดึงข้อมูลเก่ามา
-                const snapshot = await get(child(ref(db), `tools/${oldCategory}/${toolId}`));
-                const toolData = snapshot.val();
-
-                // 4.2 เปลี่ยนสีการ์ดให้ตรงกับหมวดหมู่ใหม่
-                if(newCategory === 'clinical') { toolData.bg = 'bg-indigo-100'; toolData.color = 'text-indigo-600'; }
-                else if(newCategory === 'patient') { toolData.bg = 'bg-emerald-100'; toolData.color = 'text-emerald-600'; }
-                else { toolData.bg = 'bg-slate-200'; toolData.color = 'text-slate-400'; }
-
-                // 4.3 เซฟข้อมูลลงหมวดหมู่ใหม่ (ใช้ ID เดิม)
-                await set(ref(db, `tools/${newCategory}/${toolId}`), toolData);
-
-                // 4.4 ลบข้อมูลจากหมวดหมู่เก่า
-                await remove(ref(db, `tools/${oldCategory}/${toolId}`));
-
-            } catch(error) {
-                alert('เกิดข้อผิดพลาดในการย้าย: ' + error.message);
-            }
+                const snap = await get(child(ref(db), `tools/${oldCat}/${toolId}`));
+                const data = snap.val();
+                if(newCat === 'clinical') { data.bg='bg-indigo-100'; data.color='text-indigo-600'; }
+                else if(newCat === 'patient') { data.bg='bg-emerald-100'; data.color='text-emerald-600'; }
+                else { data.bg='bg-slate-200'; data.color='text-slate-400'; }
+                await set(ref(db, `tools/${newCat}/${toolId}`), data);
+                await remove(ref(db, `tools/${oldCat}/${toolId}`));
+            } catch(error) { alert(error.message); }
         };
 
-        // 5. ฟังก์ชันลบเครื่องมือ (Delete Tool)
-        window.deleteTool = async (category, toolId) => {
-            if(confirm('คุณแน่ใจหรือไม่ว่าต้องการลบเครื่องมือนี้ออกจากระบบ?')) {
-                try {
-                    await remove(ref(db, `tools/${category}/${toolId}`));
-                } catch(error) {
-                    alert('เกิดข้อผิดพลาดในการลบ: ' + error.message);
-                }
-            }
+        window.deleteTool = async (cat, id) => {
+            if(confirm('ยืนยันการลบ?')) await remove(ref(db, `tools/${cat}/${id}`));
         };
     </script>
 </body>
