@@ -53,41 +53,35 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// --- 3. ระบบ PWA Install อัตโนมัติ ---
-
-let deferredPrompt;
-
-// ดักจับ Event เมื่อเบราว์เซอร์พร้อมให้ติดตั้ง (ทำงานบน Android และ Chrome/Edge PC)
-window.addEventListener('beforeinstallprompt', (e) => {
-    // ป้องกันเบราว์เซอร์แสดง popup เล็กๆ ของตัวเอง
-    e.preventDefault();
-    // เก็บ Event ไว้ใช้เมื่อผู้ใช้กดปุ่ม
-    deferredPrompt = e;
-});
-
-window.installApp = async (os) => {
-    // 1. กรณีเป็น Android หรือ PC และระบบพร้อมให้ติดตั้ง
-    if ((os === 'android' || os === 'pc') && deferredPrompt) {
-        // สั่งเปิดหน้าต่างติดตั้งของระบบ
-        deferredPrompt.prompt();
-
-        // รอผู้ใช้กดยืนยัน หรือ ยกเลิก
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
-            console.log('User accepted the install prompt');
-        } else {
-            console.log('User dismissed the install prompt');
-        }
-
-        // ล้างค่า Event หลังจากใช้งานเสร็จ
-        deferredPrompt = null;
-    }
-    // 2. กรณีเป็น iOS (Apple ไม่รองรับคำสั่งติดตั้งอัตโนมัติ)
-    else if (os === 'ios') {
-        alert('สำหรับ iOS:\nกรุณาแตะไอคอน Share (แชร์) ที่แถบด้านล่าง\nแล้วเลือก "Add to Home Screen" (เพิ่มไปยังหน้าจอโฮม)');
-    }
-    // 3. กรณีติดตั้งไปแล้ว หรือ เปิดบนเบราว์เซอร์ที่ไม่รองรับ / ยังไม่เป็น PWA เต็มรูปแบบ
-    else {
-        alert('อุปกรณ์นี้อาจติดตั้งแอปไว้แล้ว หรือเบราว์เซอร์ไม่รองรับการติดตั้งอัตโนมัติ\n(บน PC สามารถกดไอคอนติดตั้งที่แถบ URL ด้านขวาบนได้เลย)');
-    }
+// --- 3. ระบบ Modal ติดตั้งแอป (Install Guide) ---
+const installData = {
+    ios: { icon: "fa-apple text-slate-700", text: ["เปิด Safari", "แตะไอคอน Share (แชร์) ด้านล่าง", "เลือก Add to Home Screen (เพิ่มไปยังหน้าจอโฮม)", "กด Add (เพิ่ม)"] },
+    android: { icon: "fa-android text-green-500", text: ["เปิด Chrome", "แตะเมนู 3 จุด มุมขวาบน", "เลือก Install App (ติดตั้งแอป) หรือ Add to Home Screen", "กด ติดตั้ง"] },
+    pc: { icon: "fa-desktop text-blue-500", text: ["เปิด Chrome / Edge", "คลิกไอคอนติดตั้ง หรือเมนู 3 จุดที่มุมขวาบน", "เลือก Install (ติดตั้ง) หรือ Apps > Install"] }
 };
+
+const modal = document.getElementById('modal');
+const modalContent = document.getElementById('modal-content');
+
+// ฟังก์ชันเปิด Modal
+window.openModal = (os) => {
+    document.getElementById('modal-title').innerHTML = `<i class="fa-brands ${installData[os].icon} mr-2"></i> วิธีติดตั้งบน ${os.toUpperCase()}`;
+    document.getElementById('modal-steps').innerHTML = installData[os].text.map(step => `<li>${step}</li>`).join('');
+    modal.classList.remove('hidden');
+
+    // หน่วงเวลาเล็กน้อยเพื่อให้ Animation Transition ทำงาน
+    setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        modalContent.classList.remove('scale-95');
+    }, 10);
+};
+
+// ฟังก์ชันปิด Modal
+window.closeModal = () => {
+    modal.classList.add('opacity-0');
+    modalContent.classList.add('scale-95');
+    setTimeout(() => modal.classList.add('hidden'), 300);
+};
+
+// ปิดเมื่อคลิกพื้นที่ว่างด้านนอกกรอบ
+modal?.addEventListener('click', (e) => e.target === modal && closeModal());

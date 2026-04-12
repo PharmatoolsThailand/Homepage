@@ -4,19 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pharmatools | แหล่งรวมเครื่องมือทางเภสัชกรรม</title>
-
+    <link rel="icon" type="image/png" href="Assets/Images/favicon.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-
     <link rel="stylesheet" href="Assets/CSS/style.css">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0f766e">
-    <script>
-        // ลงทะเบียน Service Worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
-        }
-    </script>
 </head>
 <body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
 
@@ -46,25 +37,25 @@
             <p class="text-slate-500 mb-10">คลิกที่อุปกรณ์เพื่อดูวิธีเพิ่ม Pharmatools ลงในหน้าจอโฮมเพื่อเข้าใช้งานอย่างรวดเร็ว</p>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <button onclick="installApp('ios')" class="install-frame">
-                    <i class="fa-brands fa-apple text-6xl text-slate-700 mb-4"></i>
-                    <span class="font-bold text-lg text-slate-800">iOS / iPad</span>
-                    <span class="text-slate-500 text-sm mt-3 font-medium">ต้องติดตั้งผ่านเมนู Share</span>
+    <button onclick="openModal('ios')" class="install-frame">
+        <i class="fa-brands fa-apple text-6xl text-slate-700 mb-4"></i>
+        <span class="font-bold text-lg text-slate-800">iOS / iPad</span>
+        <span class="text-teal-600 text-xs mt-3 font-semibold flex items-center gap-1">ดูวิธีติดตั้ง <i class="fa-solid fa-arrow-right"></i></span>
                 </button>
-                <button onclick="installApp('android')" class="install-frame">
+
+                <button onclick="openModal('android')" class="install-frame">
                     <i class="fa-brands fa-android text-6xl text-green-500 mb-4"></i>
                     <span class="font-bold text-lg text-slate-800">Android</span>
-                    <span class="text-teal-600 text-sm mt-3 font-bold bg-teal-50 px-4 py-1.5 rounded-full flex items-center gap-2 hover:bg-teal-100 transition">
-                        ติดตั้งแอปเลย <i class="fa-solid fa-download"></i>
-                    </span>
+                    <span class="text-teal-600 text-xs mt-3 font-semibold flex items-center gap-1">ดูวิธีติดตั้ง <i class="fa-solid fa-arrow-right"></i></span>
                 </button>
-                <button onclick="installApp('pc')" class="install-frame">
+
+                <a href="Pharmatools.url" download class="install-frame text-center" style="text-decoration: none;">
                     <i class="fa-solid fa-desktop text-6xl text-blue-500 mb-4"></i>
                     <span class="font-bold text-lg text-slate-800">PC / Mac</span>
-                    <span class="text-teal-600 text-sm mt-3 font-bold bg-teal-50 px-4 py-1.5 rounded-full flex items-center gap-2 hover:bg-teal-100 transition">
-                        ติดตั้งแอปเลย <i class="fa-solid fa-download"></i>
+                    <span class="text-blue-600 text-xs mt-3 font-semibold flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-download"></i> โหลดไฟล์เข้าใช้งาน
                     </span>
-                </button>
+                </a>
             </div>
         </div>
     </section>
