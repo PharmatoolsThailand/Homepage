@@ -3,105 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pharmatools | แหล่งรวมเครื่องมือทางเภสัชกรรม</title>
-    <link rel="icon" type="image/png" href="Assets/Images/favicon.png">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Pharmatools Portal</title>
     <link rel="stylesheet" href="Assets/CSS/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
-<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
-
-    <nav class="nav-bar">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold text-teal-700 flex items-center hover:text-teal-800 transition">
-                <i class="fa-solid fa-laptop-medical mr-3 text-teal-500"></i>Pharmatools
-            </a>
-            <div class="hidden md:flex space-x-6 text-sm font-semibold text-slate-600">
-                <a href="#install-guide" class="hover:text-teal-600 transition">ติดตั้งแอป</a>
-                <a href="#tools" class="hover:text-teal-600 transition">เครื่องมือ</a>
-                <a href="feedback.html" class="text-teal-600 font-bold hover:text-teal-800"><i class="fa-solid fa-comment-dots mr-1"></i> เสนอแนะ</a>
-            </div>
+<body>
+    <nav class="top-nav">
+        <div class="nav-content">
+            <span class="nav-brand">✨ Pharmatools by เภสัชกรเอ็นดู</span>
+            <button id="back-to-home" class="btn-home" style="display: none;">🏠 กลับหน้าหลัก</button>
         </div>
     </nav>
 
-    <header class="hero-section">
-        <div class="max-w-4xl mx-auto px-4">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow-sm">แพลตฟอร์มเครื่องมือทางเภสัชกรรม</h1>
-            <p class="text-teal-100 text-lg md:text-xl drop-shadow-sm">ยกระดับความแม่นยำในการรักษาด้วยระบบสนับสนุนการตัดสินใจทางคลินิก</p>
+    <div id="home-section" class="portal-container">
+        <div class="portal-header">
+            <h1>ระบบเครื่องมือทางคลินิก</h1>
+            <p>เลือกแอปพลิเคชันที่คุณต้องการเข้าใช้งาน</p>
         </div>
-    </header>
 
-    <section id="install-guide" class="bg-white py-14 border-b border-slate-200">
-        <div class="max-w-5xl mx-auto px-4 text-center">
-            <h2 class="text-3xl font-bold text-teal-800 mb-4"><i class="fa-solid fa-download mr-2 text-teal-600"></i> ติดตั้งบนอุปกรณ์ของคุณ</h2>
-            <p class="text-slate-500 mb-10">คลิกที่อุปกรณ์เพื่อดูวิธีเพิ่ม Pharmatools ลงในหน้าจอโฮมเพื่อเข้าใช้งานอย่างรวดเร็ว</p>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <button onclick="openModal('ios')" class="install-frame">
-                    <i class="fa-brands fa-apple text-6xl text-slate-700 mb-4"></i>
-                    <span class="font-bold text-lg text-slate-800">iOS / iPad</span>
-                    <span class="text-teal-600 text-xs mt-3 font-semibold flex items-center gap-1">ดูวิธีติดตั้ง <i class="fa-solid fa-arrow-right"></i></span>
-                </button>
-                <button onclick="openModal('android')" class="install-frame">
-                    <i class="fa-brands fa-android text-6xl text-green-500 mb-4"></i>
-                    <span class="font-bold text-lg text-slate-800">Android</span>
-                    <span class="text-teal-600 text-xs mt-3 font-semibold flex items-center gap-1">ดูวิธีติดตั้ง <i class="fa-solid fa-arrow-right"></i></span>
-                </button>
-                <button onclick="openModal('pc')" class="install-frame">
-                    <i class="fa-solid fa-desktop text-6xl text-blue-500 mb-4"></i>
-                    <span class="font-bold text-lg text-slate-800">PC / Mac</span>
-                    <span class="text-teal-600 text-xs mt-3 font-semibold flex items-center gap-1">ดูวิธีติดตั้ง <i class="fa-solid fa-arrow-right"></i></span>
-                </button>
+        <main class="app-grid">
+            <div class="app-card" onclick="openWebApp('https://pharmatoolsthailand.github.io/CalcCarb/Index.html')" style="--theme-color: #3498db;">
+                <div class="card-icon-wrapper">
+                    <span class="card-icon">🍚</span>
+                </div>
+                <h3 class="card-title">CalcCarb</h3>
+                <span class="card-subtitle">คำนวณคาร์โบไฮเดรต</span>
             </div>
-        </div>
-    </section>
 
-    <main id="tools" class="flex-grow max-w-7xl mx-auto px-4 py-16 w-full">
-        <section class="mb-16">
-            <h2 class="section-title title-teal"><i class="fa-solid fa-user-doctor text-teal-600 mr-3"></i> สำหรับบุคลากรทางการแพทย์</h2>
-            <div id="clinical-tools" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-        </section>
-
-        <section class="mb-16">
-            <h2 class="section-title title-emerald"><i class="fa-solid fa-hospital-user text-emerald-600 mr-3"></i> สำหรับผู้ป่วย</h2>
-            <div id="patient-tools" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-        </section>
-
-        <section>
-            <h2 class="section-title title-slate text-slate-400"><i class="fa-solid fa-person-digging mr-3"></i> เครื่องมือที่กำลังพัฒนา (Coming Soon)</h2>
-            <div id="dev-tools" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-        </section>
-    </main>
-
-    <footer class="bg-slate-800 text-slate-400 py-10 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-6">
-            <p class="text-sm text-center md:text-left max-w-lg">
-                <span class="text-amber-500 font-semibold">Disclaimer:</span> ผลลัพธ์จากการคำนวณควรใช้ประกอบการตัดสินใจเท่านั้น ไม่สามารถทดแทนดุลยพินิจของแพทย์ได้
-            </p>
-            <div class="text-center md:text-right">
-                <p class="text-xs mb-2">พัฒนาและดูแลโดย</p>
-                <span class="px-5 py-2 bg-slate-700 rounded-full text-white text-sm font-semibold border border-slate-600 shadow-sm">
-                    <i class="fa-solid fa-book-medical mr-2 text-teal-400"></i>Endo-Pharma
-                </span>
+            <div class="app-card" onclick="openWebApp('https://pharmatoolsthailand.github.io/ADR_Timeline/Index.html')" style="--theme-color: #e74c3c;">
+                <div class="card-icon-wrapper">
+                    <span class="card-icon">⏱️</span>
+                </div>
+                <h3 class="card-title">ADR Timeline</h3>
+                <span class="card-subtitle">ประเมินระยะเวลาแพ้ยา</span>
             </div>
-        </div>
-    </footer>
 
-    <div id="modal" class="fixed inset-0 bg-slate-900 bg-opacity-60 z-[100] hidden flex items-center justify-center px-4 backdrop-blur-sm transition-opacity opacity-0 duration-300">
-        <div id="modal-content" class="bg-white rounded-3xl w-full max-w-md shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300">
-            <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex justify-between items-center">
-                <h3 id="modal-title" class="text-lg font-bold text-slate-800"></h3>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-rose-500 text-2xl transition w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200"><i class="fa-solid fa-xmark"></i></button>
+            <div class="app-card" onclick="openWebApp('https://pharmatoolsthailand.github.io/WarfarinDoseCalculator/Index.html')" style="--theme-color: #9b59b6;">
+                <div class="card-icon-wrapper">
+                    <span class="card-icon">🩸</span>
+                </div>
+                <h3 class="card-title">Warfarin Dose</h3>
+                <span class="card-subtitle">คำนวณขนาดยาวาร์ฟาริน</span>
             </div>
-            <div class="p-6">
-                <ol id="modal-steps" class="list-decimal pl-5 space-y-3 text-slate-600 text-sm leading-relaxed"></ol>
-                <button onclick="closeModal()" class="mt-8 w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3.5 rounded-full shadow-md hover:shadow-lg transition transform hover:-translate-y-0.5">
-                    เข้าใจแล้ว
-                </button>
-            </div>
-        </div>
+        </main>
     </div>
 
-    <script type="module" src="Assets/JS/script.js"></script>
+    <div id="viewer-section" class="viewer-container" style="display: none;">
+        <div class="loader-container" id="iframe-loader">
+            <div class="spinner"></div>
+            <p>กำลังโหลดระบบ...</p>
+        </div>
+        <iframe id="web-viewer" src="" frameborder="0" onload="document.getElementById('iframe-loader').style.display='none'"></iframe>
+    </div>
+
+    <script src="Assets/JS/script.js"></script>
 </body>
 </html>

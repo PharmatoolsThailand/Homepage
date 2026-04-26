@@ -1,106 +1,196 @@
-@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
-
-body { 
-    font-family: 'Sarabun', sans-serif; 
-    -webkit-font-smoothing: antialiased;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Prompt', sans-serif;
 }
 
-/* =========================================
-   Custom UI Components
-========================================= */
+body {
+    background-color: #f4f7f9;
+    color: #2c3e50;
+    overflow-x: hidden;
+}
 
-/* Navbar */
-.nav-bar {
-    background-color: #ffffff;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    border-bottom: 1px solid #e2e8f0;
-    position: sticky;
+/* --- Navigation Bar --- */
+.top-nav {
+    position: fixed;
     top: 0;
-    z-index: 50;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    z-index: 1000;
 }
 
-/* Hero Section */
-.hero-section {
-    background: linear-gradient(to right, #0f766e, #0e7490);
+.nav-content {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-brand {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #2c3e50;
+}
+
+.btn-home {
+    background: #e74c3c;
     color: white;
-    padding: 4rem 0;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 500;
+    font-family: 'Prompt', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.btn-home:hover {
+    background: #c0392b;
+    transform: translateY(-2px);
+}
+
+/* --- พื้นที่หลัก --- */
+.portal-container {
+    max-width: 1000px;
+    margin: 100px auto 40px;
+    padding: 0 20px;
+}
+
+.portal-header {
     text-align: center;
+    margin-bottom: 40px;
 }
 
-/* Section Title */
-.section-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 2rem;
-    border-left: 4px solid;
-    padding-left: 1rem;
-    display: flex;
-    align-items: center;
+.portal-header h1 {
+    font-size: 2rem;
+    color: #1a252f;
+    margin-bottom: 8px;
+    font-weight: 600;
 }
-.title-teal { border-color: #14b8a6; }
-.title-emerald { border-color: #10b981; }
-.title-slate { border-color: #cbd5e1; }
 
-/* Install Guide Frame */
-.install-frame {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: #ffffff;
-    padding: 2rem;
-    border-radius: 1.5rem;
-    border: 2px solid #f8fafc;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+.portal-header p {
+    color: #7f8c8d;
+    font-size: 1rem;
+}
+
+/* --- App Grid System --- */
+.app-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+    justify-items: center;
+}
+
+.app-card {
+    background: #ffffff;
+    width: 100%;
+    max-width: 200px;
+    padding: 25px 15px;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: 100%;
-}
-.install-frame:hover {
-    border-color: #2dd4bf;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    transform: translateY(-4px);
-    background-color: rgba(240, 253, 250, 0.5);
-}
-.install-frame i.text-6xl {
-    transition: transform 0.3s ease;
-}
-.install-frame:hover i.text-6xl {
-    transform: scale(1.1);
-}
-
-/* Tool Card */
-.tool-card {
-    display: block;
-    background-color: #ffffff;
-    border-radius: 1rem;
-    border: 1px solid #f1f5f9;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    padding: 1.5rem;
-    transition: all 0.3s ease;
-}
-.tool-card:hover {
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    transform: translateY(-4px);
-}
-.tool-card .icon-box {
-    transition: transform 0.3s ease;
-}
-.tool-card:hover .icon-box {
-    transform: scale(1.1);
-}
-
-/* Development Card */
-.dev-card {
-    background-color: rgba(248, 250, 252, 0.8);
-    border-radius: 1rem;
-    border: 2px dashed #cbd5e1;
-    padding: 1.5rem;
     position: relative;
     overflow: hidden;
 }
 
-/* Utilities */
-.hide-scrollbar::-webkit-scrollbar { display: none; }
-.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.app-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: var(--theme-color);
+}
+
+.app-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+}
+
+.card-icon-wrapper {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 15px;
+    background: #f8f9fa;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    transition: all 0.3s;
+}
+
+.app-card:hover .card-icon-wrapper {
+    background: var(--theme-color);
+    color: white;
+}
+
+.card-title {
+    font-size: 1.1rem;
+    color: #2c3e50;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.card-subtitle {
+    font-size: 0.8rem;
+    color: #95a5a6;
+}
+
+/* --- Iframe Viewer & Loader --- */
+.viewer-container {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 60px);
+    background: #fff;
+    z-index: 900;
+}
+
+#web-viewer {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* ตัวหมุน Loading */
+.loader-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 15px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loader-container p {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
