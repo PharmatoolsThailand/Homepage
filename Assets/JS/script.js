@@ -1,4 +1,4 @@
-// ฟังก์ชันสำหรับเปิดแอปใน Iframe
+// ฟังก์ชันสำหรับเปิดแอป
 function openWebApp(url) {
     if (!url || url === '#') return;
 
@@ -8,20 +8,16 @@ function openWebApp(url) {
     const btnHome = document.getElementById('back-to-home');
     const loader = document.getElementById('iframe-loader');
 
-    // โชว์หน้าโหลดข้อมูล
+    // 1. โชว์ตัวโหลดข้อมูล
     loader.style.display = 'block';
 
-    // เทคนิคป้องกันแคชเก่า (ทำให้ระบบ Sync ข้อมูลใหม่ขึ้น)
-    const cacheBuster = "v=" + new Date().getTime();
-    const finalUrl = url.includes('?') ? `${url}&${cacheBuster}` : `${url}?${cacheBuster}`;
+    // 2. สั่งโหลดหน้าเว็บ (ใส่ URL เข้าไปตรงๆ)
+    webViewer.src = url;
 
-    // โหลดหน้าเว็บ
-    webViewer.src = finalUrl;
-
-    // สลับหน้าต่างแสดงผล
+    // 3. สลับหน้าจอจากเมนูหลัก ไปหน้า Viewer
     homeSection.style.display = 'none';
     viewerSection.style.display = 'block';
-    btnHome.style.display = 'block'; // แสดงปุ่มกลับหน้าหลัก
+    btnHome.style.display = 'block';
 }
 
 // ฟังก์ชันสำหรับปุ่มกลับหน้าหลัก
@@ -31,11 +27,11 @@ document.getElementById('back-to-home').addEventListener('click', () => {
     const webViewer = document.getElementById('web-viewer');
     const btnHome = document.getElementById('back-to-home');
 
-    // ล้าง URL ใน Iframe เพื่อหยุดการทำงานพื้นหลังของแอปนั้น
+    // 1. ล้าง URL ทิ้ง! (นี่คือเคล็ดลับที่ทำให้มันต้องโหลดใหม่ทุกครั้งที่กดเข้าแอป)
     webViewer.src = "";
 
-    // สลับกลับไปหน้าเลือกแอป
+    // 2. สลับหน้าจอกลับไปเมนูหลัก
     viewerSection.style.display = 'none';
     homeSection.style.display = 'block';
-    btnHome.style.display = 'none'; // ซ่อนปุ่มกลับหน้าหลัก
+    btnHome.style.display = 'none';
 });

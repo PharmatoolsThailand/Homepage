@@ -194,3 +194,66 @@ body {
     color: #7f8c8d;
     font-size: 0.9rem;
 }
+
+/* --- โค้ดสำหรับแสดงผลบนหน้าจอโทรศัพท์มือถือ (เพิ่มไว้ล่างสุดของไฟล์ CSS) --- */
+@media screen and (max-width: 600px) {
+    /* 1. ปรับแถบ Nav ด้านบน */
+    .nav-content {
+        padding: 0 10px;
+    }
+
+    .nav-brand {
+        font-size: 0.9rem; /* ลดขนาดชื่อเว็บลงเพื่อไม่ให้ล้นจอ */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis; /* ถ้าจอยังเล็กไป จะตัดคำด้วย ... */
+    }
+
+    .btn-home {
+        padding: 6px 12px;
+        font-size: 0.8rem; /* ลดขนาดปุ่มกลับหน้าหลัก */
+    }
+
+    /* 2. ปรับฟอนต์ส่วน Header หลัก (ชื่อระบบและคำอธิบาย) */
+    .portal-container {
+        margin-top: 80px; /* ลดระยะห่างจากขอบบนลงให้พอดีขึ้น */
+        padding: 0 15px;
+    }
+
+    .portal-header {
+        margin-bottom: 25px;
+    }
+
+    .portal-header h1 {
+        font-size: 1.4rem; /* ลดขนาดหัวข้อหลัก (จากเดิม 2rem) */
+    }
+
+    .portal-header p {
+        font-size: 0.85rem; /* ลดขนาดคำอธิบายลง */
+    }
+
+    /* 3. ของแถม: ปรับ Grid ให้แอปแสดงผล 2 อันต่อแถวได้อย่างสวยงามบนมือถือ */
+    .app-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .app-card {
+        padding: 15px 10px;
+    }
+
+    .card-icon-wrapper {
+        width: 55px;
+        height: 55px;
+        font-size: 26px;
+        margin-bottom: 10px;
+    }
+
+    .card-title {
+        font-size: 0.95rem;
+    }
+
+    .card-subtitle {
+        font-size: 0.75rem;
+    }
+}
