@@ -6,45 +6,48 @@
     <title>Pharmatools Portal</title>
     <link rel="stylesheet" href="Assets/CSS/style.css">
     <link rel="manifest" href="manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Pharmatools">
-    <link rel="apple-touch-icon" href="Assets/Images/icon-192.png">
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <nav class="top-nav">
         <div class="nav-content">
             <span class="nav-brand">✨ Pharmatools by เภสัชกรเอ็นดู</span>
-            <button id="back-to-home" class="btn-home" style="display: none;">🏠 กลับหน้าหลัก</button>
+
+            <div class="nav-right">
+                <div class="nav-menu" id="nav-menu">
+                    <button class="close-menu-btn" id="close-menu-btn">✖</button>
+
+                    <button class="nav-btn" onclick="openModal('install-modal')">📱 วิธีติดตั้ง</button>
+                    <button class="nav-btn" onclick="openModal('about-modal')">👨‍⚕️ ผู้จัดทำ</button>
+                </div>
+
+                <button id="back-to-home" class="btn-home" style="display: none;">🏠 กลับหน้าหลัก</button>
+
+                <button class="hamburger-btn" id="hamburger-btn">☰</button>
+            </div>
         </div>
     </nav>
 
+    <div class="menu-overlay" id="menu-overlay"></div>
+
     <div id="home-section" class="portal-container">
         <div class="portal-header">
-            <h1>ระบบเครื่องมือทางคลินิก</h1>
-            <p>เลือกแอปพลิเคชันที่คุณต้องการเข้าใช้งาน</p>
+            <h1>เครื่องมือทางคลินิก</h1>
+            <p>เลือกแอปพลิเคชันเพื่อเริ่มใช้งาน</p>
         </div>
 
-        <main class="app-grid">
-            <div class="app-card" onclick="openWebApp('https://pharmatoolsthailand.github.io/CalcCarb/Index.html')" style="--theme-color: #3498db;">
-                <div class="card-icon-wrapper"><span class="card-icon">🍚</span></div>
-                <h3 class="card-title">CalcCarb</h3>
-                <span class="card-subtitle">คำนวณคาร์โบไฮเดรต</span>
+        <div class="search-container">
+            <div class="search-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="search-input" placeholder="ค้นหาแอป... (เช่น คำนวณ, ทั่วไป, บุคลากร)">
             </div>
+        </div>
 
-            <div class="app-card" onclick="openWebApp('https://pharmatoolsthailand.github.io/ADR_Timeline/Index.html')" style="--theme-color: #e74c3c;">
-                <div class="card-icon-wrapper"><span class="card-icon">⏱️</span></div>
-                <h3 class="card-title">ADR Timeline</h3>
-                <span class="card-subtitle">ประเมินระยะเวลาแพ้ยา</span>
-            </div>
-
-            <div class="app-card" onclick="openWebApp('https://pharmatoolsthailand.github.io/WarfarinDoseCalculator/Index.html')" style="--theme-color: #9b59b6;">
-                <div class="card-icon-wrapper"><span class="card-icon">🩸</span></div>
-                <h3 class="card-title">Warfarin Dose</h3>
-                <span class="card-subtitle">คำนวณขนาดยาวาร์ฟาริน</span>
-            </div>
-        </main>
+        <main id="app-grid-container"></main>
     </div>
 
     <div id="viewer-section" class="viewer-container" style="display: none;">
@@ -55,6 +58,45 @@
         <iframe id="web-viewer" src="" frameborder="0" onload="document.getElementById('iframe-loader').style.display='none'"></iframe>
     </div>
 
+        <div id="install-modal" class="modal-overlay">
+        <div class="modal-content install-modal-box">
+            <button class="close-btn" onclick="closeModal('install-modal')">✖</button>
+            <h2>📱 วิธีการติดตั้งแอป</h2>
+            <h3>💻 สำหรับโทรศัพท์และไอแพด (IOS / Android)</h3>
+            <div class="install-img-container">
+                <img src="Assets/Images/install-guide.jpg" alt="วิธีการติดตั้งแอปลงหน้าจอ" class="install-guide-img">
+            </div>
+
+            <div class="pc-install-section">
+                <hr class="modal-divider">
+                <h3>💻 สำหรับคอมพิวเตอร์ (PC / Laptop)</h3>
+                <p>หากคุณใช้งานผ่านคอมพิวเตอร์ สามารถกดปุ่มด้านล่างเพื่อติดตั้งลง Desktop ได้ทันที</p>
+
+                <button id="install-pwa-btn" class="modal-install-btn">
+                    ✨ คลิกเพื่อติดตั้งลงบนคอมพิวเตอร์
+                </button>
+
+                <p id="install-supported-hint" style="font-size: 0.75rem; color: #95a5a6; margin-top: 8px;">
+                    * รองรับการใช้งานผ่าน Google Chrome และ Microsoft Edge
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div id="about-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('about-modal')">✖</button>
+            <h2>👨‍⚕️ ข้อมูลผู้จัดทำ</h2>
+            <div class="about-info">
+                <div class="about-icon">✨</div>
+                <h3>Pharmatools</h3>
+                <p>โดย <strong>เภสัชกรเอ็นดู (Endo-Pharma)</strong></p>
+                <div class="about-desc">
+                    ระบบรวบรวมเครื่องมือและแอปพลิเคชันทางคลินิก เพื่อสนับสนุนการทำงานของบุคลากรทางการแพทย์ และอำนวยความสะดวกให้กับประชาชน
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="Assets/JS/script.js"></script>
 </body>
 </html>
