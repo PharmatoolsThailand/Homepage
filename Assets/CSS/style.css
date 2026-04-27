@@ -35,13 +35,25 @@ body {
     align-items: center;
 }
 
+/* --- โลโก้และชื่อเว็บ --- */
 .nav-brand {
     font-weight: 600;
     font-size: 1.1rem;
     color: #2c3e50;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-/* --- ส่วนเมนูด้านขวา (มุมมองคอมพิวเตอร์) --- */
+.nav-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    object-fit: contain;
+}
+
+/* --- เมนูด้านขวา --- */
 .nav-right {
     display: flex;
     align-items: center;
@@ -72,7 +84,6 @@ body {
     color: #3498db;
 }
 
-/* ซ่อนปุ่มต่างๆ ของมือถือไว้ก่อนในมุมมองคอม */
 .hamburger-btn, .close-menu-btn, .menu-overlay {
     display: none;
 }
@@ -119,7 +130,7 @@ body {
     font-size: 1rem;
 }
 
-/* --- ระบบค้นหา (Search) --- */
+/* --- ระบบค้นหา --- */
 .search-container {
     margin-bottom: 30px;
     display: flex;
@@ -159,7 +170,7 @@ body {
     box-shadow: 0 4px 15px rgba(52, 152, 219, 0.15);
 }
 
-/* --- ส่วนแบ่งหมวดหมู่แอป (Section) --- */
+/* --- หมวดหมู่และการ์ดแอป --- */
 .app-section {
     width: 100%;
     margin-bottom: 40px;
@@ -175,7 +186,6 @@ body {
     font-weight: 600;
 }
 
-/* --- ระบบ Grid และการ์ดแอป --- */
 .app-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -195,7 +205,6 @@ body {
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
-    /* จัดเรียงเนื้อหาจากบนลงล่าง */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -216,7 +225,6 @@ body {
     box-shadow: 0 12px 25px rgba(0,0,0,0.1);
 }
 
-/* --- ส่วนของป้ายสถานะ (New/Update) --- */
 .status-badge {
     position: absolute;
     top: 6px;
@@ -228,31 +236,27 @@ body {
     border-bottom-right-radius: 15px;
     z-index: 20;
     letter-spacing: 0.5px;
-    white-space: nowrap;
     box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
 }
 
 .status-new { background: linear-gradient(45deg, #f1c40f, #f39c12); }
 .status-update { background: linear-gradient(45deg, #3498db, #2980b9); }
 
-/* --- ส่วนของป้าย Tag (หมวดหมู่ย่อยด้านล่าง) --- */
 .card-tag {
     display: inline-block;
-    margin-top: auto; /* ดันป้าย Tag ให้ไปอยู่ล่างสุดของการ์ดเสมอ */
+    margin-top: auto;
     font-size: 0.65rem;
     padding: 5px 15px;
     border-radius: 15px;
     font-weight: 500;
     color: white;
     letter-spacing: 0.5px;
-    white-space: nowrap;
 }
 
 .tag-med { background-color: #e74c3c; box-shadow: 0 2px 5px rgba(231, 76, 60, 0.3); }
 .tag-public { background-color: #2ecc71; box-shadow: 0 2px 5px rgba(46, 204, 113, 0.3); }
 .tag-default { background-color: #9b59b6; }
 
-/* --- ไอคอนและข้อความ --- */
 .card-icon-wrapper {
     width: 70px;
     height: 70px;
@@ -284,7 +288,7 @@ body {
     margin-bottom: 15px;
 }
 
-/* --- Iframe Viewer & Loader --- */
+/* --- Iframe Viewer --- */
 .viewer-container {
     position: fixed;
     top: 60px;
@@ -329,14 +333,14 @@ body {
     font-size: 0.9rem;
 }
 
-/* --- ระบบหน้าต่าง Pop-up (Modal) ทั่วไป --- */
+/* --- ระบบ Popup (Modal) พื้นฐาน --- */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(3px);
     display: none;
     justify-content: center;
@@ -397,28 +401,28 @@ body {
     padding-bottom: 15px;
 }
 
-/* --- ส่วนปรับแต่งเฉพาะ Modal รูปภาพติดตั้ง (แก้ปัญหาทะลุขอบจอ) --- */
+/* --- ปรับแต่งเฉพาะ Popup วิธีติดตั้ง (เลื่อนได้ทั้งหน้าจอ) --- */
+#install-modal {
+    align-items: flex-start; /* ให้กล่องเริ่มจากด้านบน */
+    overflow-y: auto;        /* เปิดการเลื่อนทั้งหน้าจอ */
+    padding: 40px 10px;
+}
+
 .install-modal-box {
     max-width: 800px !important;
-    padding: 30px 20px 20px !important;
-    max-height: 90vh; /* ล็อกความสูงไม่ให้เกิน 90% ของหน้าจอ */
+    padding: 30px 20px 30px !important;
+    max-height: none !important; /* ปลดล็อกความสูง */
+    margin: auto;                /* ให้อยู่กึ่งกลางเสมอ */
     display: flex;
-    flex-direction: column; /* เรียงจากบนลงล่าง */
+    flex-direction: column;
 }
 
 .install-modal-box h2 {
-    flex-shrink: 0; /* ล็อกหัวข้อให้อยู่กับที่ */
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .install-img-container {
     width: 100%;
-    flex-grow: 1; /* ขยายกินพื้นที่ตรงกลางที่เหลือทั้งหมด */
-    overflow-y: auto; /* ให้เลื่อนได้เฉพาะตรงรูป */
-    border-radius: 10px;
-    padding-right: 5px;
-    scrollbar-width: thin;
-    scrollbar-color: #bdc3c7 #f4f7f9;
 }
 
 .install-guide-img {
@@ -429,25 +433,30 @@ body {
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
-.pc-install-section {
-    flex-shrink: 0; /* ล็อกส่วนปุ่มให้อยู่ล่างสุดเสมอ */
+/* หัวข้อย่อยในหน้าติดตั้ง */
+.install-section-title {
+    font-size: 1.05rem;
+    color: #2c3e50;
+    font-weight: 600;
     text-align: center;
-    padding-top: 10px;
-    background: #fff;
-    margin-top: 10px;
+    margin: 15px 0 15px 0;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #ecf0f1;
+    border-radius: 10px;
 }
 
 .modal-divider {
     border: 0;
     height: 1px;
     background: #ecf0f1;
-    margin: 15px 0;
+    margin: 20px 0;
 }
 
-.pc-install-section h3 {
-    font-size: 1rem;
-    color: #2c3e50;
-    margin-bottom: 10px;
+.pc-install-section {
+    text-align: center;
+    background: #fff;
+    margin-top: 10px;
 }
 
 .pc-install-section p {
@@ -470,16 +479,13 @@ body {
     transition: all 0.3s ease;
     width: 100%;
     max-width: 300px;
+    margin-bottom: 10px;
 }
 
 .modal-install-btn:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
     background: linear-gradient(45deg, #2980b9, #3498db);
-}
-
-.modal-install-btn:active {
-    transform: translateY(-1px);
 }
 
 /* --- ข้อมูลผู้จัดทำ --- */
@@ -491,13 +497,10 @@ body {
 
 
 /* ========================================= */
-/* --- ปรับแต่งสำหรับหน้าจอมือถือ (ต้องอยู่ล่างสุดเสมอ) --- */
+/* --- การตอบสนองบนมือถือ (Mobile Responsive) --- */
 /* ========================================= */
 @media screen and (max-width: 600px) {
-    /* --- ระบบ Sidebar สไลด์จากขวา --- */
-    .nav-right {
-        gap: 10px;
-    }
+    .nav-right { gap: 10px; }
 
     .hamburger-btn {
         display: block;
@@ -506,7 +509,6 @@ body {
         font-size: 1.5rem;
         color: #2c3e50;
         cursor: pointer;
-        padding: 0;
     }
 
     .nav-menu {
@@ -520,13 +522,11 @@ body {
         flex-direction: column;
         align-items: flex-start;
         padding: 60px 20px 20px;
-        transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: right 0.4s ease;
         z-index: 1001;
     }
 
-    .nav-menu.active {
-        right: 0;
-    }
+    .nav-menu.active { right: 0; }
 
     .nav-btn {
         width: 100%;
@@ -546,10 +546,8 @@ body {
         width: 35px;
         height: 35px;
         border-radius: 50%;
-        border: none;
         font-size: 1.2rem;
         color: #7f8c8d;
-        cursor: pointer;
     }
 
     .menu-overlay {
@@ -571,27 +569,36 @@ body {
         opacity: 1;
     }
 
-    /* ปรับขนาดต่างๆ ในมือถือ */
     .nav-content { padding: 0 10px; }
-    .nav-brand { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .nav-brand { font-size: 0.9rem; }
+    .nav-logo { width: 28px; height: 28px; }
     .btn-home { padding: 6px 12px; font-size: 0.8rem; }
 
     .portal-container { margin-top: 80px; padding: 0 15px; }
-    .portal-header { margin-bottom: 20px; }
     .portal-header h1 { font-size: 1.4rem; }
     .portal-header p { font-size: 0.85rem; }
 
     .app-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
     .app-card { padding: 25px 10px 15px; }
-    .card-icon-wrapper { width: 55px; height: 55px; font-size: 26px; margin-top: 5px; margin-bottom: 10px; }
+    .card-icon-wrapper { width: 55px; height: 55px; font-size: 26px; margin-bottom: 10px; }
     .card-title { font-size: 0.95rem; }
     .card-subtitle { font-size: 0.75rem; margin-bottom: 12px; }
     .card-tag { font-size: 0.6rem; padding: 4px 10px; }
     .status-badge { font-size: 0.55rem; padding: 3px 8px; }
 
-    /* ปรับ Modal ติดตั้งในมือถือ */
-    .install-modal-box {
-        padding: 20px 15px 15px !important;
-        max-height: 95vh;
-    }
+    #install-modal { padding: 20px 10px; }
+    .install-modal-box { padding: 20px 15px !important; }
+}
+
+/* --- ปรับแต่งลิงก์ไปยังเพจ --- */
+.page-link {
+    color: #3498db; /* สีฟ้าของธีมเว็บ */
+    text-decoration: none; /* เอาเส้นใต้เริ่มต้นออก */
+    transition: all 0.3s ease;
+}
+
+/* เมื่อเอาเมาส์ไปชี้ (Hover) ให้เปลี่ยนสีและมีเส้นใต้ */
+.page-link:hover {
+    color: #e74c3c; /* เปลี่ยนเป็นสีแดง */
+    text-decoration: underline;
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pharmatools Portal</title>
+    <title>Pharmatools | ระบบเครื่องมือทางคลินิก</title>
     <link rel="stylesheet" href="Assets/CSS/style.css">
     <link rel="icon" href="Assets/Images/logo-192.png" type="image/png">
     <link rel="manifest" href="manifest.json">
@@ -16,7 +16,10 @@
 <body>
     <nav class="top-nav">
         <div class="nav-content">
-            <span class="nav-brand">✨ Pharmatools by เภสัชกรเอ็นดู</span>
+            <span class="nav-brand">
+                <img src="Assets/Images/logo-192.png" alt="Pharmatools Logo" class="nav-logo">
+                Pharmatools | เครื่องมือทางคลินิก
+            </span>
 
             <div class="nav-right">
                 <div class="nav-menu" id="nav-menu">
@@ -44,7 +47,7 @@
         <div class="search-container">
             <div class="search-wrapper">
                 <span class="search-icon">🔍</span>
-                <input type="text" id="search-input" placeholder="ค้นหาแอป... (เช่น คำนวณ, ทั่วไป, บุคลากร)">
+                <input type="text" id="search-input" placeholder="ค้นหาแอป... (เช่น Timeline, Warfarin)">
             </div>
         </div>
 
@@ -60,27 +63,32 @@
     </div>
 
         <div id="install-modal" class="modal-overlay">
-        <div class="modal-content install-modal-box">
-            <button class="close-btn" onclick="closeModal('install-modal')">✖</button>
-            <h2>📱 วิธีการติดตั้งแอป</h2>
-            <h3>💻 สำหรับโทรศัพท์และไอแพด (IOS / Android)</h3>
-            <div class="install-img-container">
-                <img src="Assets/Images/install-guide.jpg" alt="วิธีการติดตั้งแอปลงหน้าจอ" class="install-guide-img">
-            </div>
+                <div class="modal-content install-modal-box">
+                    <button class="close-btn" onclick="closeModal('install-modal')">✖</button>
+                    <h2>📥 วิธีการติดตั้งแอป</h2>
 
-            <div class="pc-install-section">
-                <hr class="modal-divider">
-                <h3>💻 สำหรับคอมพิวเตอร์ (PC / Laptop)</h3>
-                <p>หากคุณใช้งานผ่านคอมพิวเตอร์ สามารถกดปุ่มด้านล่างเพื่อติดตั้งลง Desktop ได้ทันที</p>
+                    <h3 class="install-section-title">📱 สำหรับโทรศัพท์และไอแพด (iOS / Android)</h3>
 
-                <button id="install-pwa-btn" class="modal-install-btn">
-                    ✨ คลิกเพื่อติดตั้งลงบนคอมพิวเตอร์
-                </button>
+                    <div class="install-img-container">
+                        <img src="Assets/Images/install-guide.jpg" alt="วิธีการติดตั้งแอปลงหน้าจอ" class="install-guide-img">
+                    </div>
 
-                <p id="install-supported-hint" style="font-size: 0.75rem; color: #95a5a6; margin-top: 8px;">
-                    * รองรับการใช้งานผ่าน Google Chrome และ Microsoft Edge
-                </p>
-            </div>
+                    <div class="pc-install-section">
+                        <hr class="modal-divider">
+
+                        <h3 class="install-section-title">💻 สำหรับคอมพิวเตอร์ (PC / Laptop)</h3>
+
+                        <p>หากคุณใช้งานผ่านคอมพิวเตอร์ สามารถกดปุ่มด้านล่างเพื่อติดตั้งลง Desktop ได้ทันที</p>
+
+                        <button id="install-pwa-btn" class="modal-install-btn">
+                            ✨ คลิกเพื่อติดตั้งลงบนคอมพิวเตอร์
+                        </button>
+
+                        <p id="install-supported-hint" style="font-size: 0.75rem; color: #95a5a6; margin-top: 8px;">
+                            * รองรับการใช้งานผ่าน Google Chrome และ Microsoft Edge
+                        </p>
+                    </div>
+                </div>
         </div>
     </div>
 
@@ -89,11 +97,12 @@
             <button class="close-btn" onclick="closeModal('about-modal')">✖</button>
             <h2>👨‍⚕️ ข้อมูลผู้จัดทำ</h2>
             <div class="about-info">
-                <div class="about-icon">✨</div>
+                <img src="Assets/Images/logo-192.png" alt="Pharmatools Logo" class="nav-logo">
                 <h3>Pharmatools</h3>
-                <p>โดย <strong>เภสัชกรเอ็นดู (Endo-Pharma)</strong></p>
+                <p>เพจ <a href="https://www.facebook.com/profile.php?id=61575490055558" target="_blank" class="page-link"><strong>Endo-Pharma : by เภสัชกรเอ็นดู</strong></a><br>
+                <p>โดย <strong>ภก.ระพีพัฒน์ ศุภโกศล</strong> <br>การศึกษาระดับปริญาตรี <br>คณะเภสัชศาสตร์ มหาวิทยาลัยมหาสารคาม</p>
                 <div class="about-desc">
-                    ระบบรวบรวมเครื่องมือและแอปพลิเคชันทางคลินิก เพื่อสนับสนุนการทำงานของบุคลากรทางการแพทย์ และอำนวยความสะดวกให้กับประชาชน
+                    ระบบรวบรวมเครื่องมือและแอปพลิเคชันทางคลินิก เพื่อสนับสนุนการทำงานและอำนวยความสะดวกของบุคลากรทางการแพทย์
                 </div>
             </div>
         </div>
