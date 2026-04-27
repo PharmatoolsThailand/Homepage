@@ -3,7 +3,7 @@
 // ==========================================
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
+        navigator.serviceWorker.register('./sw.js') // 💡 เช็คว่าลิงก์ถูกแล้ว
             .then(reg => console.log('ลงทะเบียน Service Worker สำเร็จ!'))
             .catch(err => console.error('ลงทะเบียน Service Worker ไม่สำเร็จ:', err));
     });
